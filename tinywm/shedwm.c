@@ -1,6 +1,7 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
+#include <X11/Xatom.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -8,6 +9,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <fcntl.h>
+
 
 #define MAX_WINDOWS 50
 #define MAX_WORKSPACES 9
@@ -207,15 +209,45 @@ int main(int argc, char *argv[])
 
         bar_try_accept();
 
-        if (ev.type == MapRequest) {
-            XWindowAttributes wa;
-            XGetWindowAttributes(dpy, ev.xmaprequest.window, &wa);
-            if (!wa.override_redirect) {
-                add_client(ev.xmaprequest.window);
-                XMapWindow(dpy, ev.xmaprequest.window);
-                tile(curr);
+    if (ev.type == MapRequest) {
+        Window w = ev.xmaprequest.window;
+
+        // --- Check if this is a dock/bar ---
+        Atom actual_type;
+        int actual_format;
+        unsigned long nitems, bytes_after;
+        unsigned char *prop = NULL;
+
+        Atom net_wm_type = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
+        if (XGetWindowProperty(dpy, w, net_wm_type, 0, 1024, False, XA_ATOM,
+                               &actual_type, &actual_format, &nitems, &bytes_after, &prop) == Success)
+        {
+            if (prop) {
+                Atom dock = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
+                if (((Atom *)prop)[0] == dock) {
+                    // This is a bar/dock → just map it and skip tiling
+                    XMapWindow(dpy, w);
+                    XFree(prop);
+                    continue; // skip adding it to workspace tiling
+                }
+                XFree(prop);
             }
         }
+
+        // --- Normal client handling ---
+        XWindowAttributes wa;
+        XGetWindowAttributes(dpy, w, &wa);
+
+        if (!wa.override_redirect) {
+            add_client(w);
+            XMapWindow(dpy, w);
+            tile(curr);
+        }
+    }
+
+
+
+
         else if (ev.type == DestroyNotify || ev.type == UnmapNotify) {
             remove_client(ev.type == DestroyNotify ? ev.xdestroywindow.window : ev.xunmap.window);
         }
