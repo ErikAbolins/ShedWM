@@ -177,6 +177,13 @@ int main(int argc, char *argv[]) {
             else if (kc >= KEY_1 && kc <= KEY_9 && (state & MOD)) {
                 goto_workspace(kc - KEY_1);
             }
+            else if (kc == KEY_Q && (state & MOD) && (state & ShiftMask)) {
+                Window f; int r;
+                XGetInputFocus(dpy, &f, &r);
+                if (f != None && f != root && f != PointerRoot) {
+                    kill_client(f);
+                }
+            }
         }
     }
     return 0;
