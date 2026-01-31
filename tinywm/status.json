@@ -1,0 +1,11 @@
+{
+  "focused": 2,
+  "workspaces": [
+    {"num": 1, "occupied": true,  "urgent": false},
+    {"num": 2, "occupied": true,  "urgent": false},
+    {"num": 3, "occupied": false, "urgent": false},
+    {"num": 4, "occupied": true,  "urgent": true}
+  ],
+  "title": "firefox",
+  "time": "18:42"
+}
