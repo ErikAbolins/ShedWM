@@ -9,6 +9,8 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <fcntl.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 #define MAX_WORKSPACES 9
 #define MOD Mod4Mask
@@ -22,6 +24,7 @@
 
 /* ---------- FORWARD DECLARATIONS ---------- */
 void bar_send_update();
+void add_client(Window w); /* Needed for scan */
 
 Window focused_win = None;
 
@@ -61,6 +64,11 @@ char *wm_path;
 
 int bar_server = -1;
 int bar_client = -1;
+
+/* ---------- ERROR HANDLER ---------- */
+int xerror_start(Display *d, XErrorEvent *ee) {
+    return 0;
+}
 
 /* ---------- BSP FUNCTIONS ---------- */
 
@@ -155,42 +163,28 @@ BSPNode* get_any_leaf(BSPNode *node) {
 }
 
 void insert_window(BSPNode **root, Window w) {
-    fprintf(stderr, "insert_window: root=%p, w=%lu\n", (void*)*root, w);
-    
     if (!*root) {
-        fprintf(stderr, "insert_window: Creating first leaf node\n");
         *root = create_leaf(w);
-        fprintf(stderr, "insert_window: First node created at %p\n", (void*)*root);
         return;
     }
-    
-    fprintf(stderr, "insert_window: Finding target to split\n");
+
     BSPNode *target = get_any_leaf(*root);
-    if (!target) {
-        fprintf(stderr, "ERROR: get_any_leaf returned NULL\n");
-        return;
-    }
-    if (!target->is_leaf) {
-        fprintf(stderr, "ERROR: target is not a leaf\n");
-        return;
-    }
-    
-    fprintf(stderr, "insert_window: Target found at %p, win=%lu\n", (void*)target, target->win);
-    
-    // Alternate split direction based on current count
-    int leaf_count = count_leaves(*root);
-    SplitType split = (leaf_count % 2 == 0) ? SPLIT_VERTICAL : SPLIT_HORIZONTAL;
-    fprintf(stderr, "insert_window: Using split type %d (leaf_count=%d)\n", split, leaf_count);
+    if (!target) return;
+
+    // 1. Get the current geometry of the window we are about to split
+    XWindowAttributes wa;
+    XGetWindowAttributes(dpy, target->win, &wa);
+
+    // 2. Decide split based on shape, not a counter
+    // If width > height, split vertically (left/right)
+    // Otherwise, split horizontally (top/bottom)
+    SplitType split = (wa.width > wa.height) ? SPLIT_VERTICAL : SPLIT_HORIZONTAL;
     
     BSPNode *old_win = create_leaf(target->win);
     BSPNode *new_win = create_leaf(w);
     
-    if (!old_win || !new_win) {
-        fprintf(stderr, "ERROR: Failed to create child nodes\n");
-        return;
-    }
+    if (!old_win || !new_win) return;
     
-    fprintf(stderr, "insert_window: Converting target to container\n");
     target->is_leaf = 0;
     target->split = split;
     target->ratio = 0.5;
@@ -200,8 +194,6 @@ void insert_window(BSPNode **root, Window w) {
     
     old_win->parent = target;
     new_win->parent = target;
-    
-    fprintf(stderr, "insert_window: Done. Tree now has %d leaves\n", count_leaves(*root));
 }
 
 void remove_window(BSPNode **root, Window w) {
@@ -411,6 +403,24 @@ void refreshWm(void) {
     perror("Shedwm refresh failed");
 }
 
+void scan(void) {
+    unsigned int n, i;
+    Window d1, d2, *wins = NULL;
+    XWindowAttributes wa;
+
+    if (XQueryTree(dpy, root, &d1, &d2, &wins, &n)) {
+        for (i = 0; i < n; i++) {
+            if (!XGetWindowAttributes(dpy, wins[i], &wa)
+            || wa.override_redirect || XGetTransientForHint(dpy, wins[i], &d1))
+                continue;
+            
+            if (wa.map_state == IsViewable)
+                add_client(wins[i]);
+        }
+        if (wins) XFree(wins);
+    }
+}
+
 /* ---------- MAIN ---------- */
 
 int main(int argc, char *argv[]) {
@@ -423,6 +433,12 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     fprintf(stderr, "Display opened successfully\n");
+    
+    // Catch errors before they crash us
+    XSetErrorHandler(xerror_start);
+
+    // Prevent zombies
+    signal(SIGCHLD, SIG_IGN);
     
     root = DefaultRootWindow(dpy);
     fprintf(stderr, "Root window: %lu\n", root);
@@ -454,6 +470,9 @@ int main(int argc, char *argv[]) {
     
     bar_ipc_init();
     
+    // Recover windows
+    scan();
+
     fprintf(stderr, "Entering event loop\n");
     while (!XNextEvent(dpy, &ev)) {
         bar_try_accept();

@@ -117,17 +117,35 @@ int main()
 
         // --- SOCKET EVENTS ---
         if (FD_ISSET(sock, &fds)) {
-            char buf[MAX_BUF];
-            int len = read(sock, buf, sizeof(buf)-1);
-            if (len <= 0) continue;
-            buf[len] = '\0';
+            static char buf[MAX_BUF];
+            static int buf_len = 0;
+            
+            // Append new data to buffer
+            int len = read(sock, buf + buf_len, sizeof(buf) - buf_len - 1);
+            if (len <= 0) continue; 
+            buf_len += len;
+            buf[buf_len] = '\0';
 
-            // parse JSON into state struct
-            parse_status_json(buf, &state);
+            // Check if we have a full line (newline at end)
+            char *newline = strrchr(buf, '\n'); 
+            if (newline) {
+                *newline = '\0'; // Terminate the string at the last newline
+                
+                // If there are multiple updates, parse the last one (most recent state)
+                char *last_json = strrchr(buf, '\n');
+                if (last_json) last_json++; // skip the newline
+                else last_json = buf;
 
-            redraw_bar(cr, width, height);
-            cairo_surface_flush(surf);
-            XFlush(d);
+                parse_status_json(last_json, &state);
+                
+                redraw_bar(cr, width, height);
+                cairo_surface_flush(surf);
+                XFlush(d);
+                
+                // Reset buffer
+                buf_len = 0;
+                memset(buf, 0, sizeof(buf));
+            }
         }
     }
 
