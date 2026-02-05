@@ -1,0 +1,205 @@
+=== SHEDWM STARTING ===
+Display opened successfully
+Root window: 478
+Setting EWMH hints
+Registered as window manager
+Grabbing keys
+bar_ipc_init: Starting
+bar_ipc_init: Socket created successfully
+Entering event loop
+KeyPress: Spawning terminal
+spawn: st
+MapRequest: window 6291461
+MapRequest: Adding as managed client
+add_client: w=6291461
+add_client: Adding to workspace 0
+create_leaf: Creating leaf for window 6291461
+create_leaf: Created node at 0x558e181ab0a0
+add_client: Done
+tile_workspace: ws=0
+tile_workspace: Screen size 2560x1080
+tile_recursive: Tiling leaf window 6291461 at (0,0) 2560x1080
+tile_workspace: Done
+erresc(38): gfx attr 38 unknown
+erresc: unknown csi ESC[>0q
+erresc: unknown str ESC]7
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;1m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;0m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]7
+erresc: unknown str ESC]133
+erresc: unknown str ESC]7
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;1m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;0m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+erresc: unknown str ESC]7
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;1m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;0m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]7
+erresc: unknown str ESC]133
+erresc: unknown str ESC]7
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;1m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;0m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+erresc: unknown str ESC]7
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;1m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;0m
+erresc: unknown str ESC]133
+MapRequest: window 8388610
+MapRequest: Is a dock, mapping without tiling
+KeyPress: Switching workspace
+goto_workspace: 0 -> 1
+tile_workspace: ws=1
+tile_workspace: workspace_trees[1] is NULL, nothing to tile
+UnmapNotify: window 6291461
+remove_client: w=6291461
+remove_client: Found in workspace 0
+remove_window: Looking for window 6291461
+remove_window: Found node at 0x558e181ab0a0
+remove_window: Removing root node
+KeyPress: Switching workspace
+goto_workspace: 1 -> 0
+tile_workspace: ws=0
+tile_workspace: workspace_trees[0] is NULL, nothing to tile
+KeyPress: Switching workspace
+goto_workspace: 0 -> 0
+KeyPress: Spawning terminal
+spawn: st
+MapRequest: window 10485765
+MapRequest: Adding as managed client
+add_client: w=10485765
+add_client: Adding to workspace 0
+create_leaf: Creating leaf for window 10485765
+create_leaf: Created node at 0x558e181ab0a0
+add_client: Done
+tile_workspace: ws=0
+tile_workspace: Screen size 2560x1080
+tile_recursive: Tiling leaf window 10485765 at (0,0) 2560x1080
+tile_workspace: Done
+erresc(38): gfx attr 38 unknown
+erresc: unknown csi ESC[>0q
+erresc: unknown str ESC]7
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;1m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;0m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+erresc: unknown str ESC]7
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;1m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+MapRequest: window 12582915
+MapRequest: Adding as managed client
+add_client: w=12582915
+add_client: Adding to workspace 0
+create_leaf: Creating leaf for window 10485765
+create_leaf: Created node at 0x558e181ab470
+create_leaf: Creating leaf for window 12582915
+create_leaf: Created node at 0x558e181ab4b0
+add_client: Done
+tile_workspace: ws=0
+tile_workspace: Screen size 2560x1080
+tile_recursive: Container node, split=0, ratio=0.50
+  VERT split at x=1280
+tile_recursive: Tiling leaf window 10485765 at (0,0) 1280x1080
+tile_recursive: Tiling leaf window 12582915 at (1280,0) 1280x1080
+tile_workspace: Done
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;0m
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;1m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+KeyPress: Kill window (focused_win=12582915)
+  Sending WM_DELETE_WINDOW
+UnmapNotify: window 12582915
+remove_client: w=12582915
+remove_client: Found in workspace 0
+remove_window: Looking for window 12582915
+remove_window: Found node at 0x558e181ab4b0
+remove_window: Collapsing parent, promoting sibling
+remove_window: Done
+tile_workspace: ws=0
+tile_workspace: Screen size 2560x1080
+tile_recursive: Tiling leaf window 10485765 at (0,0) 2560x1080
+tile_workspace: Done
+DestroyNotify: window 12582915
+remove_client: w=12582915
+remove_client: Window not found in any workspace
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;0m
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;1m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+DestroyNotify: window 18874368
+remove_client: w=18874368
+remove_client: Window not found in any workspace
+DestroyNotify: window 14680065
+remove_client: w=14680065
+remove_client: Window not found in any workspace
+DestroyNotify: window 12582912
+remove_client: w=12582912
+remove_client: Window not found in any workspace
+DestroyNotify: window 12582914
+remove_client: w=12582914
+remove_client: Window not found in any workspace
+DestroyNotify: window 12582917
+remove_client: w=12582917
+remove_client: Window not found in any workspace
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;0m
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;1m
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;0m
+erresc: unknown str ESC]133
+erresc: unknown csi ESC[?2026$p
+erresc: unknown csi ESC[?u
+erresc: unknown csi ESC[>4;2m
+erresc: unknown csi ESC[22;0t
+DestroyNotify: window 12582913
+remove_client: w=12582913
+remove_client: Window not found in any workspace
+erresc: unknown csi ESC[>4;0m
+erresc: unknown csi ESC[23;0t
+erresc: unknown str ESC]133
+erresc: unknown str ESC]7
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;1m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+erresc: unknown private set/reset mode 2031
+erresc: unknown csi ESC[>4;0m
+erresc: unknown str ESC]133
+erresc: unknown str ESC]133
+X connection to :1 broken (explicit kill or server shutdown).
+erresc: unknown str ESC]7
+X connection to :1 broken (explicit kill or server shutdown).

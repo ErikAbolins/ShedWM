@@ -70,6 +70,25 @@ int xerror_start(Display *d, XErrorEvent *ee) {
     return 0;
 }
 
+
+
+
+/* --------- DEBUG LOG ----------- */
+void setup_logging() {
+    FILE *log_file = freopen("/home/erik/Documents/ShedWM/tinywm/shedwm.log", "w", stderr);
+    if(!log_file){
+        perror("failed to output logfile");
+        return;
+    }
+
+    setvbuf(stderr, NULL, _IOLBF, 0);
+
+}
+
+
+
+
+
 /* ---------- BSP FUNCTIONS ---------- */
 
 BSPNode* create_leaf(Window w) {
@@ -396,11 +415,21 @@ void spawn(char *const argv[]) {
 }
 
 void refreshWm(void) {
-    fprintf(stderr, "refreshWm: Restarting WM\n");
-    char *argv[] = {"shedwm", NULL};
+    fprintf(stderr, "refreshWm: Attempting restart...\n");
+
+    if (bar_client >= 0) close(bar_client);
+    if (bar_server >= 0) close(bar_server);
+    unlink("/tmp/shedwm_bar.sock");
+
     XCloseDisplay(dpy);
-    execvp(argv[0], argv);
-    perror("Shedwm refresh failed");
+
+    char *abs_path = "/home/erik/Documents/ShedWM/tinywm/shedwm";
+    char *const refresh_argv[] = {abs_path, NULL};
+
+    execvp(abs_path, refresh_argv);
+
+    perror("execvp failed");
+    exit(1); 
 }
 
 void scan(void) {
@@ -424,6 +453,8 @@ void scan(void) {
 /* ---------- MAIN ---------- */
 
 int main(int argc, char *argv[]) {
+    setup_logging();
+
     fprintf(stderr, "=== SHEDWM STARTING ===\n");
     XEvent ev;
     wm_path = argv[0];
